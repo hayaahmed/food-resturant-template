@@ -1,0 +1,21 @@
+{
+    "users": [
+        {
+            "name": "haya ahmed",
+            "email": "haya@gmail.com",
+            "password": "123456789",
+            "phoneNum": "01123456789",
+            "id": 1
+        }
+    ],
+    "newtab": [
+        {
+            "name": "haya helal",
+            "id": 1
+        },
+        {
+            "name": "nada",
+            "id": 2
+        }
+    ]
+}
