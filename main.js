@@ -8,6 +8,11 @@ let shopingcartSection = document.querySelector(".shoping-cart");
 //for menu show
 let navber = document.querySelector(".header .navbar");
 let menubtn = document.querySelector("#menu-btn");
+//products
+let addToCartBtns = document.querySelectorAll(".popular .box-container .box .content a");
+let productsLike = document.querySelectorAll(".popular .box-container .box > a");
+//shopping cart
+let removeProduct = document.querySelectorAll(".shoping-cart .box-container .box > a");
 
 //////for login /////
 //let getuser = document.querySelector(".get");
@@ -100,6 +105,7 @@ signupbtn.addEventListener("click", () => {
     logincontaner.classList.remove("active");
     signincontaner.classList.add("active");
 });
+/*i shoped here */
 rememberme.onchange = function () {
     if (rememberme.checked == true) {
         console.log('checked');
@@ -169,7 +175,7 @@ signup.addEventListener('click', (e) => {
 })
 
 async function postuser() {
-    await axios.post('https://restaurant-db-2e9d2-default-rtdb.firebaseio.com/users.json', {
+    await axios.post('https://usersdb-301d4-default-rtdb.firebaseio.com/users.json', {
         name: username.value,
         email: email.value,
         password: passwordSign.value,
@@ -179,19 +185,20 @@ async function postuser() {
         user = res.data;
     });
     let userid = Object.values(user)[0];
+    console.log(userid);
     getuser(userid);
 
 }
 
 async function getuser(userId) {
-    await axios.get(`https://restaurant-db-2e9d2-default-rtdb.firebaseio.com/users.json`).then((mydata) => {
+    await axios.get(`https://usersdb-301d4-default-rtdb.firebaseio.com/users/${userId}.json`).then((mydata) => {
         let res = mydata.data;
         users = res;
-
-    });
-    userdata = users[userId];
-    console.log(userdata);
-    localStorage.setItem('user-info', JSON.stringify(userdata));
+    })
+    console.log(users);
+    // userdata = users[userId];
+    // console.log(userdata);
+    localStorage.setItem('user-info', JSON.stringify(users));
     Rusers = Object.values(users);
 }
 /////
@@ -206,7 +213,8 @@ cartbtn.addEventListener("click", () => {
     shopingcartSection.classList.toggle("active");
     searchsection.classList.remove("active");
     logincontaner.classList.remove("active");
-    console.log("active cart");
+    signincontaner.classList.remove("active");
+    // console.log("active cart");
 });
 //show menu navbar
 menubtn.addEventListener("click", () => {
@@ -254,5 +262,87 @@ document.querySelector(".tohome").addEventListener("click", () => {
     searchsection.classList.remove("active");
     signincontaner.classList.remove("active");
 
+});
+
+//add to cart 
+addToCartBtns.forEach((e) => {
+    e.addEventListener("click", (o) => {
+        o.preventDefault();
+        // console.log("added to cart");
+        document.querySelector(".sucess").classList.add("open");
+        setTimeout(() => {
+            document.querySelector(".sucess").classList.remove("open");
+        }, 2000);
+    })
+})
+//liked the product
+productsLike.forEach((e) => {
+    e.addEventListener("click", (o) => {
+        o.preventDefault();
+        o.target.classList.toggle("pressed");
+    })
+});
+//remove product from shoping cart page when press x and change total price
+let cartSubTotal = document.querySelector(".cart-total .subtotal span");
+let cartTotal = document.querySelector(".cart-total .total span");
+let quantityInput = document.querySelectorAll(".shoping-cart .box-container .box .content input");
+let productsPrice = document.querySelectorAll(".shoping-cart .box-container .box");
+removeProduct.forEach((e) => {
+    e.addEventListener("click", (o) => {
+        o.preventDefault();
+        o.target.parentElement.parentElement.style.display = "none";
+        let productPrice = o.target.parentElement.parentElement.getElementsByClassName("price")[0].innerHTML;
+        let newTotal = Number(cartSubTotal.innerHTML.replace("$", "")) - Number(productPrice.replace("$", ""));
+        //  console.log(newTotal);
+        cartSubTotal.innerHTML = `$${newTotal}`;
+        cartTotal.innerHTML = `$${newTotal}`;
+
+    })
+});
+//change the total price when change quatitity of product
+quantityInput.forEach((e) => {
+    e.addEventListener("change", (o) => {
+        let productPrice = o.target.parentElement.parentElement.getElementsByClassName("price")[0].innerHTML;
+        let piecePrice = Number(productPrice.replace("$", ""));
+        newPrice = 40 * e.value;
+        // console.log(newPrice);
+        o.target.parentElement.parentElement.getElementsByClassName("price")[0].innerHTML = `$${newPrice}`;
+        let availeblePrices = Array.from(productsPrice).filter((e) => e.style.display != "none").map((e) => e.getElementsByClassName("price"));
+        let newTotalPrice = availeblePrices.map((e) => Number(e[0].innerHTML.replace("$", ""))).reduce((a, b) => a + b);
+        // console.log(newTotalPrice);
+        cartSubTotal.innerHTML = `$${newTotalPrice}`;
+        cartTotal.innerHTML = `$${newTotalPrice}`;
+    });
+
+});
+//dont reload page when btn click
+document.querySelectorAll(".btnPre").forEach((e) => {
+    e.addEventListener("click", (btn) => {
+        btn.preventDefault();
+    })
 })
 
+//close navbarMenu when press esc or click on anyplace
+document.querySelector(".navbar").classList.toggle("active");
+window.onscroll = function () {
+    document.querySelector(".navbar").classList.remove("active");
+
+};
+document.onkeydown = function (e) {
+    e = e || window.event;
+    if (e.keyCode == 27) {
+        document.querySelector(".navbar").classList.remove("active");
+    }
+};
+document.addEventListener('click', function (event) {
+    if (navber.classList.contains('active') && !event.target.isEqualNode(menubtn) && !event.target.isEqualNode(navber) && !navber.contains(event.target)) {
+        navber.classList.remove('active');
+    }
+});
+//when choose any link from navbar close the other pages if open
+document.querySelectorAll(".navbar a").forEach((e) => e.addEventListener("click", () => {
+    document.querySelector(".login-contaner").classList.remove("active");
+    document.querySelector(".signin-contaner").classList.remove("active");
+    document.querySelector(".shoping-cart").classList.remove("active");
+    document.querySelector(".search").classList.remove("active");
+}));

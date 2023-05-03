@@ -23,7 +23,7 @@ html::-webkit-scrollbar {
   width: 1rem;
 }
 html::-webkit-scrollbar-track {
-  background: #fff;
+  background: rgb(244, 240, 240);
 }
 html::-webkit-scrollbar-thumb {
   background: #27ae60;
@@ -651,6 +651,9 @@ html .popular .box-container .box .fa-heart {
 html .popular .box-container .box .fa-heart:hover {
   color: #27ae60;
 }
+html .popular .box-container .box .fa-heart.pressed {
+  color: #27ae60;
+}
 html .popular .box-container .box .image {
   margin: 1rem 0;
 }
@@ -1023,6 +1026,32 @@ html .footer .bottom .share a {
 html .footer .bottom .share a:hover {
   background-color: #130f40;
 }
+html .sucess {
+  /*text-yellow-50 bg-slate-800 rounded-lg p-2 m-3 text-center*/
+  text-align: center;
+  color: white;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 8px;
+  background-color: #27ae60;
+  width: 250px;
+  height: 40px;
+  position: sticky;
+  font-size: 12px;
+  bottom: 50px;
+  left: 0;
+  z-index: 1050;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  opacity: 0;
+  display: none;
+}
+html .sucess.open {
+  display: block;
+  opacity: 1;
+}
 
 @media (max-width: 991px) {
   html {
@@ -1058,6 +1087,9 @@ html .footer .bottom .share a:hover {
 @media (max-width: 450px) {
   html {
     font-size: 50%;
+  }
+  .shoping-cart .box-container {
+    grid-template-columns: repeat(auto-fit, minmax(34rem, 1fr)) !important;
   }
   .shoping-cart .cart-total .box {
     text-align: center;
